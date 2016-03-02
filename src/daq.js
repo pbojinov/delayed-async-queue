@@ -1,28 +1,31 @@
-
-// Third-Party Code
-window._daq = window._daq || [];
-// _daq.push([() => {
-//   console.log('hi there queue, thanks for running me!');
-// }]); // test iife
-_daq.push(['regularFunctionName', 'do-something']); // test regular function
-// _daq.push(['App.namespacedfunction', 'some-something-else', 'more data']); // test namespaced function
-
-
 /**
  * Delayed Async Queue
+ * ----------------------
+ * Author: Petar Bojinov (petarbojinov@gmail.com)
+ * License: MIT
  */
 
 class DelayedAsyncQueue {
-  constructor(queue = window._daq || [], intervalTimer = 2000) {
 
+  constructor(queue = window._daq || [], intervalTimer = 2000) {
     // overridable settings
+    // ---------------------
+    // the queue to process on
     this.queue = queue;
+    // how often to run through items in the queue
     this.intervalTimer = intervalTimer;
 
     // constants
+    // ---------------------
+    // used to stop the queue by clearing the interval
     this.queueInterval = null;
+    // internal state to determine when to proces
     this.isProcessing = false;
   }
+
+  ////////////////////////////
+  // Private Functions
+  ////////////////////////////
 
   // @private
   _processQueue() {
@@ -58,7 +61,6 @@ class DelayedAsyncQueue {
     }
   }
 
-
   // @private
   // http://stackoverflow.com/a/359910/907388
   // functionName, context, [args]
@@ -69,14 +71,14 @@ class DelayedAsyncQueue {
     for (let i = 0; i < namespaces.length; i++) {
       context = context[namespaces[i]];
     }
-    // throwing an error here
-    //  Cannot read property 'apply' of undefined
+    // throwing an error here for named functions
+    // Cannot read property 'apply' of undefined
     debugger;
     return context[func].apply(this, args);
   }
 
   ////////////////////////////
-  // Start and Stop queue code
+  // Public Functions
   ////////////////////////////
 
   // @public
@@ -93,6 +95,8 @@ class DelayedAsyncQueue {
     return window.clearInterval(this.queueInterval);
   }
 
+  // TODO - create setters so we can use the getters
+  // ---------------------
   // get length() {
   //   return this.queue.length;
   // }
@@ -106,30 +110,5 @@ class DelayedAsyncQueue {
   // }
 
 }
-
-////////////////////////////
-/// Sample public api that will be called by the queue
-////////////////////////////
-var App = App || {};
-App.namespacedfunction = function() {
-  // this function is being called directly but through function queue
-  var args = [].slice.call(arguments[0]);
-  name = args[0];
-  data = args[1];
-  console.log('running: ', name);
-  console.log('with data: ', data);
-}
-function regularFunctionName() {
-  // this function is being called directly but through function queue
-  var args = [].slice.call(arguments[0]);
-  name = args[0];
-  data = args[1];
-  console.log('running experiment: ', name);
-  console.log('with data: ', data);
-}
-
-// import DelayedAsyncQueue from 'delayedasyncqueue';
-// let queue = new DelayedAsyncQueue(queue = window._daq);
-// queue.start();
 
 export default DelayedAsyncQueue;

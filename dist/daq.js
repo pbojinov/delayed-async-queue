@@ -8,16 +8,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// Third-Party Code
-window._daq = window._daq || [];
-// _daq.push([() => {
-//   console.log('hi there queue, thanks for running me!');
-// }]); // test iife
-_daq.push(['regularFunctionName', 'do-something']); // test regular function
-// _daq.push(['App.namespacedfunction', 'some-something-else', 'more data']); // test namespaced function
-
 /**
  * Delayed Async Queue
+ * ----------------------
+ * Author: Petar Bojinov (petarbojinov@gmail.com)
+ * License: MIT
  */
 
 var DelayedAsyncQueue = function () {
@@ -28,13 +23,23 @@ var DelayedAsyncQueue = function () {
     _classCallCheck(this, DelayedAsyncQueue);
 
     // overridable settings
+    // ---------------------
+    // the queue to process on
     this.queue = queue;
+    // how often to run through items in the queue
     this.intervalTimer = intervalTimer;
 
     // constants
+    // ---------------------
+    // used to stop the queue by clearing the interval
     this.queueInterval = null;
+    // internal state to determine when to proces
     this.isProcessing = false;
   }
+
+  ////////////////////////////
+  // Private Functions
+  ////////////////////////////
 
   // @private
 
@@ -90,14 +95,14 @@ var DelayedAsyncQueue = function () {
       for (var i = 0; i < namespaces.length; i++) {
         context = context[namespaces[i]];
       }
-      // throwing an error here
-      //  Cannot read property 'apply' of undefined
+      // throwing an error here for named functions
+      // Cannot read property 'apply' of undefined
       debugger;
       return context[func].apply(this, args);
     }
 
     ////////////////////////////
-    // Start and Stop queue code
+    // Public Functions
     ////////////////////////////
 
     // @public
@@ -122,6 +127,8 @@ var DelayedAsyncQueue = function () {
       return window.clearInterval(this.queueInterval);
     }
 
+    // TODO - create setters so we can use the getters
+    // ---------------------
     // get length() {
     //   return this.queue.length;
     // }
@@ -138,33 +145,6 @@ var DelayedAsyncQueue = function () {
 
   return DelayedAsyncQueue;
 }();
-
-////////////////////////////
-/// Sample public api that will be called by the queue
-////////////////////////////
-
-
-var App = App || {};
-App.namespacedfunction = function () {
-  // this function is being called directly but through function queue
-  var args = [].slice.call(arguments[0]);
-  name = args[0];
-  data = args[1];
-  console.log('running: ', name);
-  console.log('with data: ', data);
-};
-function regularFunctionName() {
-  // this function is being called directly but through function queue
-  var args = [].slice.call(arguments[0]);
-  name = args[0];
-  data = args[1];
-  console.log('running experiment: ', name);
-  console.log('with data: ', data);
-}
-
-// import DelayedAsyncQueue from 'delayedasyncqueue';
-// let queue = new DelayedAsyncQueue(queue = window._daq);
-// queue.start();
 
 exports.default = DelayedAsyncQueue;
 

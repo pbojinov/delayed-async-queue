@@ -1,7 +1,7 @@
 {
-  "name": "delayed-async-queue",
-  "version": "0.1.0",
-  "description": "A Google Analytics-like queue used to process things asyncronously",
+  "name": "daq",
+  "version": "0.1.1",
+  "description": "Delayed Async Queue - A Google Analytics-like queue used to process things asyncronously",
   "main": "src/daq.js",
   "dependencies": {
     "babel-core": "^6.6.4",
