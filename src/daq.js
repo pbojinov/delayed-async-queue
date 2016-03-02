@@ -1,11 +1,11 @@
 
 // Third-Party Code
 window._daq = window._daq || [];
-_daq.push([() => {
-  console.log('hi there queue, thanks for running me!');
-}]); // test iife
-// _daq.push(['regularFunctionName', 'do-something']); // test regular function
-// _teq.push(['App.namespacedfunction', 'some-something-else', 'more data']); // test namespaced function
+// _daq.push([() => {
+//   console.log('hi there queue, thanks for running me!');
+// }]); // test iife
+_daq.push(['regularFunctionName', 'do-something']); // test regular function
+// _daq.push(['App.namespacedfunction', 'some-something-else', 'more data']); // test namespaced function
 
 
 /**
@@ -13,7 +13,7 @@ _daq.push([() => {
  */
 
 class DelayedAsyncQueue {
-  constructor(queue = [], intervalTimer = 2000) {
+  constructor(queue = window._daq || [], intervalTimer = 2000) {
 
     // overridable settings
     this.queue = queue;
@@ -42,8 +42,8 @@ class DelayedAsyncQueue {
 
   // @private
   _apply() {
-    let func = null;
-    let parameterArray = null;
+    let func;
+    let parameterArray;
     for (let i = 0; i < arguments.length; i += 1) {
       parameterArray = arguments[i];
       func = parameterArray.shift();
@@ -61,6 +61,7 @@ class DelayedAsyncQueue {
 
   // @private
   // http://stackoverflow.com/a/359910/907388
+  // functionName, context, [args]
   _executeFunctionByName(functionName, context) {
     let args = [].slice.call(arguments).splice(2);
     let namespaces = functionName.split('.');
@@ -68,6 +69,9 @@ class DelayedAsyncQueue {
     for (let i = 0; i < namespaces.length; i++) {
       context = context[namespaces[i]];
     }
+    // throwing an error here
+    //  Cannot read property 'apply' of undefined
+    debugger;
     return context[func].apply(this, args);
   }
 
@@ -103,10 +107,6 @@ class DelayedAsyncQueue {
 
 }
 
-// import DelayedAsyncQueue from 'delayedasyncqueue';
-let queue = new DelayedAsyncQueue(queue = window._daq);
-queue.start();
-
 ////////////////////////////
 /// Sample public api that will be called by the queue
 ////////////////////////////
@@ -127,3 +127,9 @@ function regularFunctionName() {
   console.log('running experiment: ', name);
   console.log('with data: ', data);
 }
+
+// import DelayedAsyncQueue from 'delayedasyncqueue';
+// let queue = new DelayedAsyncQueue(queue = window._daq);
+// queue.start();
+
+export default DelayedAsyncQueue;
