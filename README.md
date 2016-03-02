@@ -1,6 +1,6 @@
 # Delayed Async Queue
 
-> This is a alpha work in progress. It's used in production at the moment but this is an attempt to make it its own stand-alone library. Use at your own risk...for now.
+> This is an alpha work in progress. It's used in production at the moment but this is an attempt to make it its own stand-alone library. Use at your own risk...for now.
 
 ## Getting Started
 
