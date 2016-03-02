@@ -32,7 +32,7 @@ class DelayedAsyncQueue {
     console.log('queue with length: ', this.queue.length);
     if (this.queue.length > 0) {
       this.isProcessing = true;
-      for (var i = 0; i < this.queue.length; i++) {
+      for (let i = 0; i < this.queue.length; i++) {
         if (this.queue[i]) {
           // send off item to get processed
           this._apply(this.queue[i]);
